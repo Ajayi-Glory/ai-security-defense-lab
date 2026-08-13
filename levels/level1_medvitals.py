@@ -20,7 +20,7 @@ CLOUDTRAIL_LOGS = [
     {"event_time": "2026-06-30 03:02:09 UTC", "event_name": "AssumeRole",              "source_ip": "198.51.100.45", "user_agent": "python-requests/2.28.1", "identity": "medvitals-deploy-bot → arn:aws:iam::000000000000:role/AdminFullAccess"},
     {"event_time": "2026-06-30 03:02:31 UTC", "event_name": "ListBuckets",             "source_ip": "198.51.100.45", "user_agent": "python-requests/2.28.1", "identity": "medvitals-deploy-bot"},
     {"event_time": "2026-06-30 03:03:02 UTC", "event_name": "PutObject",               "source_ip": "198.51.100.45", "user_agent": "python-requests/2.28.1", "identity": "medvitals-deploy-bot"},
-    {"event_time": "2026-06-30 03:04:18 UTC", "event_name": "GetObject",               "source_ip": "198.51.100.45", "user_agent": "python-requests/2.28.1", "identity": "medvitals-deploy-bot"},
+    {"event_time": "2026-06-30 03:04:18 UTC", "event_name": "",               "source_ip": "198.51.100.45", "user_agent": "python-requests/2.28.1", "identity": "medvitals-deploy-bot"},
 ]
 
 CLOUDTRAIL_DETAILS = [
@@ -113,6 +113,7 @@ def render_level1(user, supabase_client):
                 st.session_state.l1_completed = True
         except Exception:
             pass
+            
 
     st.markdown(
         '<div style="background:linear-gradient(135deg,#0B7B6E,#064E3B);border-radius:10px;padding:20px 28px;margin-bottom:24px;">'
@@ -168,25 +169,26 @@ def render_level1(user, supabase_client):
     st.caption("The following files were found in the MedVitals AI GitHub repository.")
     tab1, tab2 = st.tabs(["config.py", "deploy-role-policy.json"])
     with tab1:
-        '# config.py\n# MedVitals AI — Production Environment Configuration\n# Maintained by: engineering-team@medvitals.ai\n# Last updated: 2026-05-14\n\n'
-    'import os\nfrom dotenv import load_dotenv\n\nload_dotenv()\n\n'
-    'APP_ENV = "production"\nAPP_NAME = "medvitals-ai"\nAPP_PORT = 8080\nLOG_LEVEL = "INFO"\n\n'
-    'AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")\n'
-    'AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")\n'
-    'AWS_ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")\n\n'
-    'DB_HOST = os.environ.get("DB_HOST")\n'
-    'DB_PORT = int(os.environ.get("DB_PORT", 5432))\n'
-    'DB_NAME = os.environ.get("DB_NAME")\n'
-    'DB_USER = os.environ.get("DB_USER")\n'
-    'DB_PASSWORD = os.environ.get("DB_PASSWORD")\n\n'
-    'LLM_ENDPOINT = os.environ.get("LLM_ENDPOINT")\n'
-    'LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o")\n'
-    'LLM_TIMEOUT = int(os.environ.get("LLM_TIMEOUT", 30))\n\n'
-    'SESSION_SECRET = os.environ.get("SESSION_SECRET")',
+        st.code(
+            '# config.py\n# MedVitals AI — Production Environment Configuration\n# Maintained by: engineering-team@medvitals.ai\n# Last updated: 2026-05-14\n\n'
+            'import os\nfrom dotenv import load_dotenv\n\nload_dotenv()\n\n'
+            'APP_ENV = "production"\nAPP_NAME = "medvitals-ai"\nAPP_PORT = 8080\nLOG_LEVEL = "INFO"\n\n'
+            'AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")\n'
+            'AWS_REGION = os.environ.get("AWS_REGION", "us-east-1")\n'
+            'AWS_ACCOUNT_ID = os.environ.get("AWS_ACCOUNT_ID")\n\n'
+            'DB_HOST = os.environ.get("DB_HOST")\n'
+            'DB_PORT = int(os.environ.get("DB_PORT", 5432))\n'
+            'DB_NAME = os.environ.get("DB_NAME")\n'
+            'DB_USER = os.environ.get("DB_USER")\n'
+            'DB_PASSWORD = os.environ.get("DB_PASSWORD")\n\n'
+            'LLM_ENDPOINT = os.environ.get("LLM_ENDPOINT")\n'
+            'LLM_MODEL = os.environ.get("LLM_MODEL", "gpt-4o")\n'
+            'LLM_TIMEOUT = int(os.environ.get("LLM_TIMEOUT", 30))\n\n'
+            'SESSION_SECRET = os.environ.get("SESSION_SECRET")',
         )
     with tab2:
         st.code(
-         '{\n'
+            '{\n'
             '  "Version": "2012-10-17",\n'
             '  "Statement": [\n'
             '    {\n'
