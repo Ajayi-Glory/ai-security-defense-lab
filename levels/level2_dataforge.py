@@ -114,8 +114,9 @@ def render_level2(user, supabase_client):
     # Section 1: Deployment Repository
     st.markdown("#### Deployment Repository")
     st.caption("The following files were found in the DataForge ML GitHub repository.")
-    tab1, tab2, tab3 = st.tabs(["model_loader.py", "requirements.txt", "model_loader_hardened.py"])
-    with tab1:
+    tab1, tab2, tab3 = st.tabs(["model_loader.py", "requirements_hardened.txt", "model_loader_hardened.py"])
+
+with tab1:
         st.code(
             '# model_loader.py\n'
             '# DataForge ML — Genomics Analysis Pipeline\n'
@@ -150,33 +151,89 @@ def render_level2(user, supabase_client):
             '    return {"status": "complete", "results": results}',
             language="python",
         )
-    with tab2:
-        st.code(
-            'numpy==1.24.3\npandas==2.0.1\nscikit-learn==1.3.0\n'
-            'requests==2.31.0\nhuggingface-hub==0.16.4\nbiopython==1.81\ntorch==2.0.1',
-            language="text",
+with tab2:
+    st.code(
+        'numpy==1.24.3\n'
+        'pandas==2.0.1\n'
+        'scikit-learn==1.3.0\n'
+        'requests==2.31.0\n'
+        'huggingface-hub==0.16.4\n'
+        'safetensors==0.4.0\n'
+        'picklescan==0.0.14\n',
+        language="text",
+    )
+with tab3:
+         st.code("""
+# model_loader_hardened.py
+# DataForge ML - Genomics Analysis Pipeline
+# SECURITY PATCH - Patched by Ajayi Glory - 2026-08-19
+# Changes: removed unsafe pickle loading, added Picklescan pre-load scan,
+# and switched to safetensors
+
+from pathlib import Path
+import requests
+
+MODEL_REPO = "verified-org/genomics-analyzer-v2"
+MODEL_FILE = "genomics_analyzer_v2.safetensors"
+MODEL_PATH = Path("/tmp") / MODEL_FILE
+MODEL_URL = f"https://huggingface.co/{MODEL_REPO}/resolve/main/{MODEL_FILE}"
+
+def scan_model_before_loading(model_path: Path) -> None:
+    \"\"\"Security gate: run Picklescan before loading.\"\"\"
+    result = subprocess.run(
+        ["picklescan", "-p", str(model_path)],
+        capture_output=True,
+        text=True
+    )
+
+    if "FOUND" in result.stdout:
+        raise RuntimeError(
+            f"SECURITY ALERT: Dangerous payload in {model_path}. "
+            f"Aborting. Details: {result.stdout}"
         )
-    with tab3:
-        st.caption("This is your workspace. Open levels/level2_dataforge.py in your forked Codespace and replace this placeholder with your hardened version.")
-        st.code(
-            '# model_loader_hardened.py\n'
-            '# DataForge ML — Genomics Analysis Pipeline\n'
-            '#\n'
-            '# This is your workspace.\n'
-            '# Open levels/level2_dataforge.py in your forked Codespace.\n'
-            '# Replace this placeholder with your hardened version of model_loader.py.\n'
-            '# Your commit showing this change is your Level 2 portfolio evidence.',
-            language="python",
-        )
 
-    st.markdown("---")
+    print(f"[SCAN] {model_path.name} passed. Safe to load.")
 
-    # Section 2: HF Repo Viewer
-    st.markdown("#### Source Model Repository")
-    st.caption("This is the Hugging Face repository the model was downloaded from. Audit it before reading any further.")
-    render_hf_repo(user.email)
+def download_model() -> Path:
+    \"\"\"Download model weights from verified Hugging Face repository.\"\"\"
+    if not MODEL_PATH.exists():
+        response = requests.get(MODEL_URL, stream=True)
+        with open(MODEL_PATH, "wb") as f:
+            for chunk in response.iter_content(chunk_size=8192):
+                f.write(chunk)
+    return MODEL_PATH
 
-    st.markdown("---")
+def load_model():
+    \"\"\"Load model with mandatory pre-scan verification.\"\"\"
+    model_path = download_model()
+    scan_model_before_loading(model_path)
+
+    from safetensors import safe_open
+
+    tensors = {}
+    with safe_open(str(model_path), framework="pt") as f:
+        for key in f.keys():
+            tensors[key] = f.get_tensor(key)
+
+    return tensors
+
+def analyze_sample(sample_data: dict) -> dict:
+    model = load_model()
+    return {
+        "status": "complete",
+        "model_keys": list(model.keys())
+    }
+""", language="python")
+
+
+st.markdown("---")
+
+ # Section 2: HF Repo Viewer
+st.markdown("#### Source Model Repository")
+st.caption("This is the Hugging Face repository the model was downloaded from. Audit it before reading any further.")
+render_hf_repo(user.email)
+
+st.markdown("---")
 
     # Section 3: Live Picklescan — student runs it themselves
     st.markdown("#### Model Integrity Scanner — Run This Yourself")
@@ -237,11 +294,10 @@ def render_level2(user, supabase_client):
         unsafe_allow_html=True,
     )
 
-    st.markdown("---")
+st.markdown("---")
 
-    # Interview questions
-    with st.expander("📋 Interview Questions for This Level"):
-        st.markdown(
+    # Interview questions with st.expander("📋 Interview Questions for This Level"):
+st.markdown(
             "1. What is model supply chain poisoning and how would you detect it before deployment?\n"
             "2. What is the difference between loading a model with pickle vs safetensors?\n"
             "3. How would you build an automated pre-deployment model validation pipeline?\n"
@@ -249,19 +305,19 @@ def render_level2(user, supabase_client):
             "5. Where in a CI/CD pipeline would you place Picklescan and why?"
         )
 
-    st.markdown("---")
+st.markdown("---")
 
     # Submit section
-    st.markdown("#### Submit Your Level 2 Work")
+st.markdown("#### Submit Your Level 2 Work")
 
-    if st.session_state.get("l2_completed"):
+if st.session_state.get("l2_completed"):
         st.success("✅ Level 2 is complete. Level 3 — CartBot AI is now unlocked.")
         if st.button("← Return to Hub", key="l2_return_done"):
             st.session_state.view = "hub"
             st.rerun()
-        return
+            
 
-    st.info(
+st.info(
         "Before submitting, confirm you have completed all three tasks:\n\n"
         "1. **Identified the vulnerabilities** in model_loader.py and the source model repo.\n"
         "2. **Run Picklescan yourself** in your Codespace terminal and recorded the output.\n"
@@ -269,18 +325,18 @@ def render_level2(user, supabase_client):
         "4. **Completed your Model Threat Assessment** document."
     )
 
-    commit_url = st.text_input(
+commit_url = st.text_input(
         "GitHub commit URL showing your model_loader.py fix:",
         placeholder="https://github.com/your-username/ai-security-defense-lab/commit/abc123",
         key="l2_commit_url",
     )
-    report_url = st.text_input(
-        "Model Threat Assessment link (Google Doc, GitHub Gist, or Markdown file):",
+report_url = st.text_input(
+        "Model Security Incident Report link (GitHub Gist, Google Doc, or Medium post):",
         placeholder="https://gist.github.com/your-username/...",
         key="l2_report_url",
     )
 
-    if st.button("Submit Level 2 Work →", key="l2_submit"):
+if st.button("Submit Level 2 Work →", key="l2_submit"):
         if not commit_url or not report_url:
             st.warning("Paste both links above before submitting.")
         elif "github.com" not in commit_url and "gitlab.com" not in commit_url:
