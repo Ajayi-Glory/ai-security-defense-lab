@@ -235,30 +235,29 @@ render_hf_repo(user.email)
 
 st.markdown("---")
 
-    # Section 3: Live Picklescan — student runs it themselves
-    st.markdown("#### Model Integrity Scanner — Run This Yourself")
-    st.info(
+ # Section 3: Live Picklescan — student runs it themselves
+st.markdown("#### Model Integrity Scanner — Run This Yourself")
+st.info(
         "The model fixture file is already in your forked repo at `models/genomics_analyzer_v2.pkl`. "
         "Open your Codespace, run the commands below in the terminal, and record your findings. "
         "Do not skip this — your scan output is evidence in your Model Security Assessment."
-    )
+)
+st.markdown("**Step 1 — Install Picklescan:**")
+st.code("pip install picklescan", language="bash")
 
-    st.markdown("**Step 1 — Install Picklescan:**")
-    st.code("pip install picklescan", language="bash")
+st.markdown("**Step 2 — Run the scan against the fixture file:**")
+st.code("picklescan -p models/genomics_analyzer_v2.pkl", language="bash")
 
-    st.markdown("**Step 2 — Run the scan against the fixture file:**")
-    st.code("picklescan -p models/genomics_analyzer_v2.pkl", language="bash")
-
-    st.markdown("**Step 3 — Interpret your output. You are looking for four things:**")
-    st.markdown(
+st.markdown("**Step 3 — Interpret your output. You are looking for four things:**")
+st.markdown(
         "- **Infected files** — how many files contain threats\n"
         "- **Dangerous globals** — the specific dangerous import or callable detected\n"
         "- **The threat type** — what kind of payload is embedded (REDUCE opcode, subprocess, os, etc.)\n"
         "- **The verdict** — FOUND means the file is unsafe to load in any environment"
     )
 
-    st.markdown("**What Picklescan is doing:**")
-    st.markdown(
+st.markdown("**What Picklescan is doing:**")
+st.markdown(
         "Picklescan performs static analysis — it reads the raw bytes of the pickle file and inspects "
         "the serialisation opcodes without executing any code. This is why it is safe to run against "
         "a malicious file. In production pipelines, Picklescan runs automatically inside the CI/CD "
@@ -266,13 +265,12 @@ st.markdown("---")
         "teaches you what that automated check is doing and how to configure it yourself."
     )
 
-    st.markdown("---")
-
+st.markdown("---")
     # Section 4: Model Threat Assessment
-    st.markdown("#### Model Threat Assessment")
-    st.caption("Based on your Picklescan output, complete this structured risk assessment. This is your DataForge ML deliverable.")
+st.markdown("#### Model Threat Assessment")
+st.caption("Based on your Picklescan output, complete this structured risk assessment. This is your DataForge ML deliverable.")
 
-    st.markdown(
+st.markdown(
         '<div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:20px; margin-top:12px;">'
         '<div style="font-size:13px; font-weight:600; color:#1E293B; margin-bottom:16px;">DataForge ML — Model Security Assessment Template</div>'
         '<table style="width:100%; border-collapse:collapse; font-size:13px;">'
