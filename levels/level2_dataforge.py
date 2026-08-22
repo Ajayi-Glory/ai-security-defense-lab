@@ -114,7 +114,11 @@ def render_level2(user, supabase_client):
     # Section 1: Deployment Repository
     st.markdown("#### Deployment Repository")
     st.caption("The following files were found in the DataForge ML GitHub repository.")
-    tab1, tab2, tab3 = st.tabs(["model_loader.py", "requirements_hardened.txt", "model_loader_hardened.py"])
+    tab1, tab2, tab3 = st.tabs([
+        "model_loader.py", 
+        "requirements_hardened.txt", 
+        "model_loader_hardened.py"
+         ])
 
 with tab1:
         st.code(
