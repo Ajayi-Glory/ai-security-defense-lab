@@ -162,7 +162,7 @@ def render_level2(user, supabase_client):
         st.code(
             '# model_loader_hardened.py\n'
             '# DataForge ML — Genomics Analysis Pipeline\n'
-            '# SECURITY PATCH — Patched by: Ajayi Glory — 22q' August 2026\n'
+            '# SECURITY PATCH - Patched by: Ajayi Glory - 22nd August 2026\n'
             '# Changes: removed unsafe pickle loading, added Picklescan gate, switched to safetensors\n\n'
             'import subprocess\n'
             'from pathlib import Path\n\n'
