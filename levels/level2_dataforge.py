@@ -195,6 +195,18 @@ def scan_model_before_loading(model_path: Path) -> None:
             f"SECURITY ALERT: Dangerous payload in {model_path}. "
             f"Aborting. Details: {result.stdout}"
         )
+    with tab3:
+        st.caption("This is your workspace. Open levels/level2_dataforge.py in your forked Codespace and replace this placeholder with your hardened version.")
+        st.code(
+            '# model_loader_hardened.py\n'
+            '# DataForge ML — Genomics Analysis Pipeline\n'
+            '#\n'
+            '# This is your workspace.\n'
+            '# Open levels/level2_dataforge.py in your forked Codespace.\n'
+            '# Replace this placeholder with your hardened version of model_loader.py.\n'
+            '# Your commit showing this change is your Level 2 portfolio evidence.',
+            language="python",
+        )
 
     print(f"[SCAN] {model_path.name} passed. Safe to load.")
 
