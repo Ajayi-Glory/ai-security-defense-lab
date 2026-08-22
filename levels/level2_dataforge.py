@@ -114,13 +114,8 @@ def render_level2(user, supabase_client):
     # Section 1: Deployment Repository
     st.markdown("#### Deployment Repository")
     st.caption("The following files were found in the DataForge ML GitHub repository.")
-    tab1, tab2, tab3 = st.tabs([
-        "model_loader.py [Evidence — Do Not Delete]" 
-        "requirements_hardened.txt" 
-        "model_loader_hardened.py"
-         ])
-
-with tab1:
+    tab1, tab2, tab3 = st.tabs(["model_loader.py [Evidence — Do Not Delete]", "requirements_hardened.txt", "model_loader_hardened.py"])
+    with tab1:
         st.code(
             '# model_loader.py\n'
             '# DataForge ML — Genomics Analysis Pipeline\n'
@@ -155,48 +150,19 @@ with tab1:
             '    return {"status": "complete", "results": results}',
             language="python",
         )
-with tab2:
-    st.code(
-        'numpy==1.24.3\npandas==2.0.1\nscikit-learn==1.3.0\n'
+    with tab2:
+        st.code(
+           'numpy==1.24.3\npandas==2.0.1\nscikit-learn==1.3.0\n'
 'requests==2.31.0\nhuggingface-hub==0.16.4\nbiopython==1.81\ntorch==2.0.1\n'
 'safetensors==0.4.0\n'
 'picklescan==0.0.14',
-    )
-with tab3:
-         st.code("""
-# model_loader_hardened.py
-# DataForge ML - Genomics Analysis Pipeline
-# SECURITY PATCH - Patched by Ajayi Glory - 2026-08-19
-# Changes: removed unsafe pickle loading, added Picklescan pre-load scan,
-# and switched to safetensors
-
-from pathlib import Path
-import requests
-
-MODEL_REPO = "verified-org/genomics-analyzer-v2"
-MODEL_FILE = "genomics_analyzer_v2.safetensors"
-MODEL_PATH = Path("/tmp") / MODEL_FILE
-MODEL_URL = f"https://huggingface.co/{MODEL_REPO}/resolve/main/{MODEL_FILE}"
-
-def scan_model_before_loading(model_path: Path) -> None:
-    \"\"\"Security gate: run Picklescan before loading.\"\"\"
-    result = subprocess.run(
-        ["picklescan", "-p", str(model_path)],
-        capture_output=True,
-        text=True
-    )
-
-    if "FOUND" in result.stdout:
-        raise RuntimeError(
-            f"SECURITY ALERT: Dangerous payload in {model_path}. "
-            f"Aborting. Details: {result.stdout}"
         )
     with tab3:
         st.caption("This is your workspace. Open levels/level2_dataforge.py in your forked Codespace and replace this placeholder with your hardened version.")
         st.code(
-           '# model_loader_hardened.py\n'
+            '# model_loader_hardened.py\n'
             '# DataForge ML — Genomics Analysis Pipeline\n'
-            '# SECURITY PATCH — Patched by: Ajayi Glory — 22/08/2026\n'
+            '# SECURITY PATCH — Patched by: Ajayi Glory — 22q' August 2026\n'
             '# Changes: removed unsafe pickle loading, added Picklescan gate, switched to safetensors\n\n'
             'import subprocess\n'
             'from pathlib import Path\n\n'
@@ -249,74 +215,41 @@ def scan_model_before_loading(model_path: Path) -> None:
             '    model = load_model()\n'
             '    return {"status": "complete", "model_keys": list(model.keys())}',
             language="python",
-        ) 
+        )
 
-    print(f"[SCAN] {model_path.name} passed. Safe to load.")
+    st.markdown("---")
 
-def download_model() -> Path:
-    \"\"\"Download model weights from verified Hugging Face repository.\"\"\"
-    if not MODEL_PATH.exists():
-        response = requests.get(MODEL_URL, stream=True)
-        with open(MODEL_PATH, "wb") as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
-    return MODEL_PATH
+    # Section 2: HF Repo Viewer
+    st.markdown("#### Source Model Repository")
+    st.caption("This is the Hugging Face repository the model was downloaded from. Audit it before reading any further.")
+    render_hf_repo(user.email)
 
-def load_model():
-    \"\"\"Load model with mandatory pre-scan verification.\"\"\"
-    model_path = download_model()
-    scan_model_before_loading(model_path)
+    st.markdown("---")
 
-    from safetensors import safe_open
-
-    tensors = {}
-    with safe_open(str(model_path), framework="pt") as f:
-        for key in f.keys():
-            tensors[key] = f.get_tensor(key)
-
-    return tensors
-
-def analyze_sample(sample_data: dict) -> dict:
-    model = load_model()
-    return {
-        "status": "complete",
-        "model_keys": list(model.keys())
-    }
-""", language="python")
-
-
-st.markdown("---")
-
- # Section 2: HF Repo Viewer
-st.markdown("#### Source Model Repository")
-st.caption("This is the Hugging Face repository the model was downloaded from. Audit it before reading any further.")
-render_hf_repo(user.email)
-
-st.markdown("---")
-
- # Section 3: Live Picklescan — student runs it themselves
-st.markdown("#### Model Integrity Scanner — Run This Yourself")
-st.info(
+    # Section 3: Live Picklescan — student runs it themselves
+    st.markdown("#### Model Integrity Scanner — Run This Yourself")
+    st.info(
         "The model fixture file is already in your forked repo at `models/genomics_analyzer_v2.pkl`. "
         "Open your Codespace, run the commands below in the terminal, and record your findings. "
         "Do not skip this — your scan output is evidence in your Model Security Assessment."
-)
-st.markdown("**Step 1 — Install Picklescan:**")
-st.code("pip install picklescan", language="bash")
+    )
 
-st.markdown("**Step 2 — Run the scan against the fixture file:**")
-st.code("picklescan -p models/genomics_analyzer_v2.pkl", language="bash")
+    st.markdown("**Step 1 — Install Picklescan:**")
+    st.code("pip install picklescan", language="bash")
 
-st.markdown("**Step 3 — Interpret your output. You are looking for four things:**")
-st.markdown(
+    st.markdown("**Step 2 — Run the scan against the fixture file:**")
+    st.code("picklescan -p models/genomics_analyzer_v2.pkl", language="bash")
+
+    st.markdown("**Step 3 — Interpret your output. You are looking for four things:**")
+    st.markdown(
         "- **Infected files** — how many files contain threats\n"
         "- **Dangerous globals** — the specific dangerous import or callable detected\n"
         "- **The threat type** — what kind of payload is embedded (REDUCE opcode, subprocess, os, etc.)\n"
         "- **The verdict** — FOUND means the file is unsafe to load in any environment"
     )
 
-st.markdown("**What Picklescan is doing:**")
-st.markdown(
+    st.markdown("**What Picklescan is doing:**")
+    st.markdown(
         "Picklescan performs static analysis — it reads the raw bytes of the pickle file and inspects "
         "the serialisation opcodes without executing any code. This is why it is safe to run against "
         "a malicious file. In production pipelines, Picklescan runs automatically inside the CI/CD "
@@ -324,12 +257,12 @@ st.markdown(
         "teaches you what that automated check is doing and how to configure it yourself."
     )
 
-st.markdown("---")
-    # Section 4: Model Threat Assessment
-st.markdown("#### Model Threat Assessment")
-st.caption("Based on your Picklescan output, complete this structured risk assessment. This is your DataForge ML deliverable.")
+    st.markdown("---")
 
-st.markdown(
+    # Section 4: Model Threat Assessment
+    st.markdown("#### Model Threat Assessment")
+    st.caption("Based on your Picklescan output, complete this structured risk assessment. This is your DataForge ML deliverable.")
+    st.markdown(
         '<div style="background:#F8FAFC; border:1px solid #E2E8F0; border-radius:8px; padding:20px; margin-top:12px;">'
         '<div style="font-size:13px; font-weight:600; color:#1E293B; margin-bottom:16px;">DataForge ML — Model Security Assessment Template</div>'
         '<table style="width:100%; border-collapse:collapse; font-size:13px;">'
@@ -337,24 +270,26 @@ st.markdown(
         '<th style="padding:10px 14px; text-align:left; color:#64748B; border-bottom:1px solid #E2E8F0; width:35%;">Field</th>'
         '<th style="padding:10px 14px; text-align:left; color:#64748B; border-bottom:1px solid #E2E8F0;">Your Finding</th>'
         '</tr></thead><tbody>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Model File</td><td style="padding:10px 14px; color:#6B7280;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Source Repository</td><td style="padding:10px 14px; color:#6B7280;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Serialisation Format</td><td style="padding:10px 14px; color:#6B7280;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Threats Detected</td><td style="padding:10px 14px; color:#6B7280;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Threat Type</td><td style="padding:10px 14px; color:#6B7280;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Supply Chain Risk Factors</td><td style="padding:10px 14px; color:#6B7280;"></td></tr>'
-        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Business Impact</td><td style="padding:10px 14px; color:#6B7280;"></td></tr>'
-        '<tr><td style="padding:10px 14px; color:#374151; font-weight:500;">Remediation Plan</td><td style="padding:10px 14px; color:#6B7280;"></td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Model File</td><td style="padding:10px 14px; color:#6B7280;">genomics_analyzer_v2.pkl</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Source Repository</td><td style="padding:10px 14px; color:#6B7280;">huggingface.co/logix-community/genomics-analyzer-v2</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Serialisation Format</td><td style="padding:10px 14px; color:#6B7280;">Pickle (.pkl), a legacy Python serialisation format that can execute embedded code during loading/deserialisation.</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Threats Detected</td><td style="padding:10px 14px; color:#6B7280;">Infected files: 1; Dangerous globals: 1</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Threat Type</td><td style="padding:10px 14px; color:#6B7280;">subprocess check_output</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Threat Classification</td><td style="padding:10px 14px; color:#6B7280;">MITRE ATLAS: AML.T0010 — ML Supply Chain Compromise<br>Technique: embedding malicious payload in .pkl model weights via public repository</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Supply Chain Risk Factors</td><td style="padding:10px 14px; color:#6B7280;">&bull; Unverified account<br>&bull; No checksum provided<br>&bull; Licence is unknown<br>&bull; No model card is provided<br>&bull; The model uses the legacy .pkl format</td></tr>'
+        '<tr style="border-bottom:1px solid #F1F5F9;"><td style="padding:10px 14px; color:#374151; font-weight:500;">Business Impact</td><td style="padding:10px 14px; color:#6B7280;">Loading the malicious pickle could execute the embedded payload in the DataForge ML production pipeline. Because the pipeline processes patient sample data, successful exploitation could allow an attacker to access, modify, or exfiltrate sensitive data and potentially execute additional commands using the privileges available to the pipeline. This could result in data exposure, service disruption, and compromise of the production environment.</td></tr>'
+        '<tr><td style="padding:10px 14px; color:#374151; font-weight:500;">Remediation Plan</td><td style="padding:10px 14px; color:#6B7280;">Replace unsafe Pickle loading with safetensors; add Picklescan as a mandatory pre-load security gate; use a verified model source; and introduce model integrity verification before allowing models into the production pipeline.</td></tr>'
         '</tbody></table>'
         '<div style="margin-top:12px; font-size:11px; color:#94A3B8;">Complete this in a Google Doc, GitHub Gist, or Markdown file. You will paste the link below when submitting.</div>'
         '</div>',
         unsafe_allow_html=True,
     )
 
-st.markdown("---")
+    st.markdown("---")
 
-    # Interview questions with st.expander("📋 Interview Questions for This Level"):
-st.markdown(
+    # Interview questions
+    with st.expander("📋 Interview Questions for This Level"):
+        st.markdown(
             "1. What is model supply chain poisoning and how would you detect it before deployment?\n"
             "2. What is the difference between loading a model with pickle vs safetensors?\n"
             "3. How would you build an automated pre-deployment model validation pipeline?\n"
@@ -362,19 +297,19 @@ st.markdown(
             "5. Where in a CI/CD pipeline would you place Picklescan and why?"
         )
 
-st.markdown("---")
+    st.markdown("---")
 
     # Submit section
-st.markdown("#### Submit Your Level 2 Work")
+    st.markdown("#### Submit Your Level 2 Work")
 
-if st.session_state.get("l2_completed"):
+    if st.session_state.get("l2_completed"):
         st.success("✅ Level 2 is complete. Level 3 — CartBot AI is now unlocked.")
         if st.button("← Return to Hub", key="l2_return_done"):
             st.session_state.view = "hub"
             st.rerun()
-            
+        return
 
-st.info(
+    st.info(
         "Before submitting, confirm you have completed all three tasks:\n\n"
         "1. **Identified the vulnerabilities** in model_loader.py and the source model repo.\n"
         "2. **Run Picklescan yourself** in your Codespace terminal and recorded the output.\n"
@@ -382,18 +317,18 @@ st.info(
         "4. **Completed your Model Threat Assessment** document."
     )
 
-commit_url = st.text_input(
+    commit_url = st.text_input(
         "GitHub commit URL showing your model_loader.py fix:",
         placeholder="https://github.com/your-username/ai-security-defense-lab/commit/abc123",
         key="l2_commit_url",
     )
-report_url = st.text_input(
-        "Model Security Incident Report link (GitHub Gist, Google Doc, or Medium post):",
+    report_url = st.text_input(
+        "Model Threat Assessment link (Google Doc, GitHub Gist, or Markdown file):",
         placeholder="https://gist.github.com/your-username/...",
         key="l2_report_url",
     )
 
-if st.button("Submit Level 2 Work →", key="l2_submit"):
+    if st.button("Submit Level 2 Work →", key="l2_submit"):
         if not commit_url or not report_url:
             st.warning("Paste both links above before submitting.")
         elif "github.com" not in commit_url and "gitlab.com" not in commit_url:
