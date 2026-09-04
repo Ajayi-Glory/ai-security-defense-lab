@@ -52,19 +52,27 @@ Fill in each section as you complete a level. Link directly to your commit diff 
 
 ## Level 3 — CartBot AI · Application & API Security
 
-**Problem:**
+**Problem:**The Api trusted a client-supplied customer_id
+JWT validation was disabled.
+Rate limiting was disabled.
+The AI system prompt needed protection.
 
-**Method:**
+**Method:**Audited api_config.py
+Identified the three vulnerablities.
+Tested the Api
+Implemented JWT validation/rate limiting/system-prompt injection.
+Ran the tests again
+created my Api security findings report.
 
-**Evidence:** [Link to commit]
+**Evidence:**https://github.com/Ajayi-Glory/ai-security-defense-lab/commit/af6ffd31e0a7090077b842761b8b816ddbh43ae81
 
-**Outcome:**
+**Outcome:**The API required proper JWT validation instead of trusting a customer ID Supplied by the client,and that the other identified controls were addressed.
 
 **Skills:** AI API Hardening · Rate Limiting · Output Filtering · OWASP LLM Top 10 · Direct Prompt Injection Defence
 
 **Others:**
-- [Technical write-up link]
-- [LinkedIn post link]
+- [https://github.com/Ajayi-Glory/ai-security-defense-lab/commit/af6ffd31e0a7090077b842761b8b816ddbh43ae81]
+- [https://www.linkedin.com/posts/ajayi-glory-8b3397420_level-3-of-my-ai-security-fellowship-completed-activity-7501742120064438272-ZThM?utm_source=share&utm_medium=member_ios&rcm=ACoAAGrX8UcBcXv7iOr5YSVFAsr-YFm0w9oX_04]
 
 ---
 
