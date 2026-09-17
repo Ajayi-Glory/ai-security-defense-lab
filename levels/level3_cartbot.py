@@ -71,7 +71,7 @@ def render_level3(user, supabase_client):
 
     st.markdown("#### Deployment Repository")
     st.caption("The following files were found in the CartBot AI GitHub repository.")
-    tab1, tab2, tab3 = st.tabs("api_config.py [Evidence — Do Not Delete]","requirements_hardened.txt" , "api_config_hardened.py"])
+    tab1, tab2, tab3 = st.tabs(["api_config.py [Evidence – Do Not Delete]", "requirements_hardened.txt", "api_config_hardened.py"])
 
     with tab1:
         st.code(
