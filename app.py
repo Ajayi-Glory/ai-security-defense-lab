@@ -402,7 +402,7 @@ def render_level_view(view_name, profile, progress):
 
 
 # ── Main router ────────────────────────────────────────────────────────────────
- st.session_state.user is None:
+ 
 if st.session_state.user is None:
     render_auth_screen()
 else:
