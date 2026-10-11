@@ -78,19 +78,19 @@ created my Api security findings report.
 
 ## Level 4 — PayGuard · Data Security in AI
 
-**Problem:**
+**Problem:**PayGuard AI handles sensitive financial data in a multi-tenant environment. The assessment focused on risks involving cross-tenant data leakage, weaknesses in RAG retrieval, and the possibility of poisoned or tampered fine-tuning data entering the training pipeline.
 
-**Method:**
+**Method:**Investigated the PayGuard RAG pipeline and fine-tuning configuration. Examined how tenant isolation was enforced, reviewed training-data integrity controls, and used security testing and static analysis to identify weaknesses. Worked on moving tenant enforcement to the database layer, validating training data against approved checksums, and improving the consistency of AI responses.
 
-**Evidence:** [Link to commit]
+**Evidence:** https://github.com/Ajayi-Glory/ai-security-defense-lab/commit/e04949a18aac5027b5516fec7dc930a81672a500
 
-**Outcome:**
+**Outcome:**Implemented proposed security changes for database-level tenant isolation and fine-tuning data validation. The changes also included deterministic context anchoring and rate-limiting controls. Final test results must be verified before recording the remediation as fully successful.
 
 **Skills:** STRIDE Threat Modeling · RAG Pipeline Security · Multi-Tenant Data Isolation · Indirect Prompt Injection Defence
 
 **Others:**
-- [Technical write-up link]
-- [LinkedIn post link]
+- [https://github.com/Ajayi-Glory/hernetiq-fellowship-portfolio/blob/main/week-11-level%204-data-security-findings.md]
+- [https://lnkd.in/p/gpqnBSx2]
 
 ---
 
