@@ -41,7 +41,8 @@ level 1 Report link:https://github.com/Ajayi-Glory/hernetiq-fellowship-portfolio
 
 **Method:**Inspected the model loading code and source model repository, ran picklescan against the vulnerable model,identified the malicious subprocess payload, and hardened the pipeline by replacing pickle loading with safe tensors and adding picklescan verification before model loading
 
-**Evidence:** https://github.com/Ajayi-Glory/ai-security-defense-lab/commit/b350cb7475d6ed23dcba3e9455fbe26225f3aa0d
+**Evidence:**level 2 commit link  https://github.com/Ajayi-Glory/ai-security-defense-lab/commit/b350cb7475d6ed23dcba3e9455fbe26225f3aa0d
+level 2 Report link: https://github.com/Ajayi-Glory/hernetiq-fellowship-portfolio/blob/main/week-6/model%20security%20assement.md
 
 **Outcome:**Removed the unsafe pickle-based model loading path, adding a security scanning gate and switched the model format to safe tensor to reduce the risk of malicious model deserialization.
 
