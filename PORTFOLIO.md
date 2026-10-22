@@ -68,7 +68,8 @@ Implemented JWT validation/rate limiting/system-prompt injection.
 Ran the tests again
 created my Api security findings report.
 
-**Evidence:**https://github.com/Ajayi-Glory/ai-security-defense-lab/commit/af6ffd31e0a7090077b842761b8b816ddbh43ae81
+**Evidence:** level https://github.com/Ajayi-Glory/ai-security-defense-lab/commit/af6ffd31e0a7090077b842761b8b816ddbh43ae81
+Level 3 security finding:https://github.com/Ajayi-Glory/hernetiq-fellowship-portfolio/blob/main/week%20-8/Ai-application-security-report.md
 
 **Outcome:**The API required proper JWT validation instead of trusting a customer ID Supplied by the client,and that the other identified controls were addressed.
 
