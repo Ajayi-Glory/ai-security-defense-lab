@@ -20,7 +20,10 @@ Fill in each section as you complete a level. Link directly to your commit diff 
 
 **Method:** I reviewed the cloud infrastructure and security logs identifield excessive permissions and exposed secrets, traced the attack activity, and applied least priviledge security control to reduce the attack surface.
 
-**Evidence:** https://github.com/Ajayi-Glory/hernetiq-fellowship-portfolio/commit/35559bff9d0b8c7e08c81bcd9605a304cd117d2e
+**Evidence:**level 1 commit link: https://github.com/Ajayi-Glory/hernetiq-fellowship-portfolio/commit/35559bff9d0b8c7e08c81bcd9605a304cd117d2e
+level 1 Report link:https://github.com/Ajayi-Glory/hernetiq-fellowship-portfolio/blob/main/Week%204/Incident%20timeline%20report%20level%201
+
+
 
 **Outcome:** Reduced unnecessary access, improved protectionof sensitive credential, and documented the incident timeline and security findings.
 
